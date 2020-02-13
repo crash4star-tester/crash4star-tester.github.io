@@ -6,9 +6,6 @@ function sendRequest(method, url, body = null) {
     };
 
     return fetch(url, {
-        method: method,
-        body: JSON.stringify(body),
-        headers: headers
     }).then(response => {
         if (response.ok) {
             return response.json();
@@ -23,15 +20,15 @@ function sendRequest(method, url, body = null) {
     });
 }
 
-// sendRequest('GET', requestUrl)
-//     .then(data => console.log(data))
-//     .catch(err => console.log(err))
-
-let main = {
-    name: 'Crash4star',
-    age: 24
-}
-
-sendRequest('POST', requestUrl, main)
+sendRequest('GET', requestUrl)
     .then(data => console.log(data))
     .catch(err => console.log(err))
+
+// let main = {
+//     name: 'Crash4star',
+//     age: 24
+// }
+
+// sendRequest('POST', requestUrl, main)
+//     .then(data => console.log(data))
+//     .catch(err => console.log(err))

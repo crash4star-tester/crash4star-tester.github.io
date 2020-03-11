@@ -1,34 +1,47 @@
 const requestUrl = 'https://crash4star-tester.github.io/data.json';
 
 function sendRequest(method, url, body = null) {
-    let headers = {
-        'Content-type': 'application/json'
-    };
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
 
-    return fetch(url, {
-    }).then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return response.json().then(error => {
-                const e = new Error('Something wrong!');
-                e.data = error;
-                throw e;
-            });
+        xhr.open(method, url);
+
+        xhr.responseType = 'json';
+        xhr.setRequestHeader('Content-type', 'application/json');
+
+        xhr.onload = () => {
+            if(xhr.status >= 400) {
+                reject(xhr.response);
+            } else {
+                resolve(xhr.response);
+            }
         }
 
-    });
+        xhr.onerror = () => {
+            reject(xhr.response);
+        }
+
+        xhr.send(JSON.stringify(body));
+    })
 }
 
-sendRequest('GET', requestUrl)
+
+const btn = document.querySelector('#send'),
+      input = document.querySelector('#user');
+
+
+btn.onclick = function(e) {
+    e.preventDefault();
+
+    let userName = {};
+
+    userName.name = input.value;
+    input.value = '';
+
+    console.log(userName);
+
+    sendRequest('POST', requestUrl, userName)
     .then(data => console.log(data))
     .catch(err => console.log(err))
+};
 
-// let main = {
-//     name: 'Crash4star',
-//     age: 24
-// }
-
-// sendRequest('POST', requestUrl, main)
-//     .then(data => console.log(data))
-//     .catch(err => console.log(err))
